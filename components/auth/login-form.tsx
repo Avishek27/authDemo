@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form"
-
+// import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
    Form,
@@ -19,9 +19,14 @@ import { Button } from "../ui/button";
 import { FormError } from "../formError";
 import { FormSuccess } from "../formSuccess";
 import { login } from "@/actions/login";
-import { useState, useTransition } from "react";
+import { Suspense, useState, useTransition } from "react";
 
 export const LoginForm  = () => {
+  // const searchParams = useSearchParams();
+  // const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
+  //     ? "Email is already in use with another provider"
+  //     : "";
+
    const [error,setError] = useState<string | undefined>("");
    const [success,setSuccess] = useState<string | undefined>("");
     const [isPending,startTransition] = useTransition();
@@ -40,8 +45,9 @@ export const LoginForm  = () => {
       startTransition(() => {
         login(values)
         .then((data) => {
-          setError(data.error);
-          setSuccess(data.success);
+          setError(data?.error);
+          console.log("code is in login of onSubmit in loginForm");
+          setSuccess(data?.success);
         });
       });
     }
@@ -94,7 +100,9 @@ export const LoginForm  = () => {
 
               </FormField>
             </div>
+            
             <FormError message= {error}/>
+            
             <FormSuccess message = {success}/>
             <Button className="w-full" type="submit" disabled={isPending}>
               Login
@@ -102,4 +110,5 @@ export const LoginForm  = () => {
           </form>
         </Form>
         </CardWrapper>
+        
 }

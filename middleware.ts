@@ -1,4 +1,3 @@
-import { auth } from './auth';
 import NextAuth from "next-auth";
 import authConfig from "./auth.config"
 import {
@@ -8,7 +7,7 @@ import {
   apiAuthPrefix,
 } from "./routes";
 
-export const { auth: middleware } = NextAuth(authConfig);
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
@@ -19,10 +18,11 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if(isApiAuthRoute){
-    return ;
+    return;
   }
   if(isAuthRoute){
     if(isLoggedIn){
+      console.log("code is in middleware");
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT,nextUrl));
     }
     return ;
